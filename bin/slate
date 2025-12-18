@@ -9,8 +9,9 @@ filename = File.basename(args, ".*")
 begin
   content = File.read(args)
   #Kramdown is cool. 
-  html_content = Kramdown::Document.new(content).to_html
-  File.write("#{filename}.html", html_content)
+  raw_html = Kramdown::Document.new(content).to_html
+  final_html = "<body>\n#{raw_html}\n</body>"
+  File.write("#{filename}.html", final_html)
   puts "Saved #{filename}.html"
 rescue Errno::ENOENT
     puts "No such file: #{args}"
