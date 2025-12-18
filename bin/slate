@@ -3,12 +3,15 @@
 require 'kramdown'
 
 args = ARGV[0]
+filename = File.basename(args, ".*")
 
 # Ruby uses begin-rescue keywords instead of try-catch LMAO.... WHYYY
 begin
   content = File.read(args)
   #Kramdown is cool. 
-  puts Kramdown::Document.new(content).to_html
+  html_content = Kramdown::Document.new(content).to_html
+  File.write("#{filename}.html", html_content)
+  puts "Saved #{filename}.html"
 rescue Errno::ENOENT
     puts "No such file: #{args}"
 rescue => e
