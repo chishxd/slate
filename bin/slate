@@ -2,4 +2,13 @@
 
 args = ARGV[0]
 
-puts "Soo... We are using #{args}, right?"
+# puts "Soo... We are using #{args}, right?"
+
+begin
+  content = File.read(args)
+  puts content
+rescue Errno::ENOENT
+    puts "No such file: #{args}"
+rescue => e
+    puts "Unexpected error occured: #{e.message}"
+end
