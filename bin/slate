@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+args = ARGV[0]
+
+puts "Soo... We are using #{args}, right?"
