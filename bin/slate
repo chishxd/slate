@@ -1,12 +1,14 @@
 #!/usr/bin/env ruby
 
+require 'kramdown'
+
 args = ARGV[0]
 
-# puts "Soo... We are using #{args}, right?"
-
+# Ruby uses begin-rescue keywords instead of try-catch LMAO.... WHYYY
 begin
   content = File.read(args)
-  puts content
+  #Kramdown is cool. 
+  puts Kramdown::Document.new(content).to_html
 rescue Errno::ENOENT
     puts "No such file: #{args}"
 rescue => e
