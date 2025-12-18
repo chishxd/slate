@@ -10,8 +10,10 @@ begin
   content = File.read(args)
   #Kramdown is cool. 
   raw_html = Kramdown::Document.new(content).to_html
-  final_html = "<body>\n#{raw_html}\n</body>"
+
+  final_html = "<head>\n<title> #{filename} </title> <link href='style.css' rel='stylesheet'></head><body class='markdown-body'>\n#{raw_html}\n</body>"
   File.write("#{filename}.html", final_html)
+
   puts "Saved #{filename}.html"
 rescue Errno::ENOENT
     puts "No such file: #{args}"
