@@ -1,7 +1,5 @@
 # Slate
 
-TODO: Delete this and the text below, and describe your gem
-
 A Markdown to HTML generator written in Ruby while participating in DUMMIES by Hack Club.
 
 ## Installation
