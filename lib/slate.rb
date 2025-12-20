@@ -5,11 +5,55 @@ require "kramdown"
 
 module Slate
   class Error < StandardError; end
-  def self.convert(md_content, title)
-    raw_html = Kramdown::Document.new(md_content).to_html
+  class CLI
+    def self.run(path)
+      path = File.expand_path(path)
+      if File.file?(path)
+        process_file(path)
+      elsif File.directory?(path)
+        process_directory(path)
+      else
+        puts "Error: #{path} Is neither a file, nor a directory"
+      end
+    end
 
-    final_html = "<head>\n<title> #{title} </title> <link href='style.css' rel='stylesheet'></head><body class='markdown-body'>\n#{raw_html}\n</body>"
+    def self.convert(md_content, title)
+      raw_html = Kramdown::Document.new(md_content).to_html
 
-    return final_html
+      final_html = "<head>\n<title> #{title} </title> <link href='style.css' rel='stylesheet'></head><body class='markdown-body'>\n#{raw_html}\n</body>"
+
+      return final_html
+    end
+
+    def self.process_file(path)
+      puts "Argument seems to be a single file, Parsing it"
+      content = File.read(path)
+      filename = File.basename(path, ".*")  
+      dir = File.dirname(path)
+  
+      style_path = File.join(__dir__, '..', 'style.css')
+      FileUtils.cp(style_path, dir)
+      
+      final_html = convert(content, filename)
+      File.write("#{filename}.html", final_html)
+      puts "Saved #{filename}.html"
+    end
+
+    def self.process_directory(path)
+      puts "Found a directory, gotta check all .md files!"
+
+      style_path = File.join(__dir__, '..', 'style.css')
+      FileUtils.cp(style_path, path)
+  
+      files = Dir.glob(File.join(path, "*.md"))
+      files.each do |file|
+        content = File.read(file)
+        filename = File.basename(file, ".*")    
+        final_html = convert(content, file)
+        File.write("#{filename}.html", final_html)
+        puts "Saved #{filename}.html"
+      end
+    end
+
   end
 end
