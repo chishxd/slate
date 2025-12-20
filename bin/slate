@@ -1,17 +1,24 @@
 #!/usr/bin/env ruby
 
+require_relative '../lib/slate'
 require 'kramdown'
 
 args = ARGV[0]
+
+if args.nil?
+  puts "Error: Please enter a file"
+  exit
+end
+
 filename = File.basename(args, ".*")
+
+
 
 # Ruby uses begin-rescue keywords instead of try-catch LMAO.... WHYYY
 begin
   content = File.read(args)
-  #Kramdown is cool. 
-  raw_html = Kramdown::Document.new(content).to_html
+  final_html = Slate.convert(content, filename)
 
-  final_html = "<head>\n<title> #{filename} </title> <link href='style.css' rel='stylesheet'></head><body class='markdown-body'>\n#{raw_html}\n</body>"
   File.write("#{filename}.html", final_html)
 
   puts "Saved #{filename}.html"
