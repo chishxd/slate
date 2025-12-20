@@ -2,6 +2,7 @@
 
 require_relative '../lib/slate'
 require 'kramdown'
+require 'fileutils'
 
 args = ARGV[0]
 
@@ -17,6 +18,10 @@ filename = File.basename(args, ".*")
 # Ruby uses begin-rescue keywords instead of try-catch LMAO.... WHYYY
 begin
   content = File.read(args)
+  dir = File.dirname(args)
+
+  FileUtils.cp("style.css", dir)
+
   final_html = Slate.convert(content, filename)
 
   File.write("#{filename}.html", final_html)
