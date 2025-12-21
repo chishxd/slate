@@ -27,35 +27,39 @@ module Slate
       return final_html
     end
 
-    def self.process_file(path)
-      puts "Argument seems to be a single file, Parsing it"
-      content = File.read(path)
-      filename = File.basename(path, ".*")
+    def self.move_css(path)
       dir = File.dirname(path)
   
       style_path = File.join(__dir__, '..', 'style.css')
       FileUtils.cp(style_path, dir)
-      
+    end
+
+    def self.save_file(path)
+      content = File.read(path)
+      filename = File.basename(path, ".*")
+      dir = File.dirname(path)
+
+      output_path = File.join(dir, "#{filename}.html")
       final_html = convert(content, filename)
-      output_path = File.join(path, "#{filename}.html")
       File.write(output_path, final_html)
       puts "Saved #{filename}.html"
+    end
+
+    def self.process_file(path)
+      puts "Argument seems to be a single file, Parsing it"
+      move_css(path)
+      save_file(path)
     end
 
     def self.process_directory(path)
       puts "Found a directory, gotta check all .md files!"
 
-      style_path = File.join(__dir__, '..', 'style.css')
-      FileUtils.cp(style_path, path)
+      move_css(path)
   
       files = Dir.glob(File.join(path, "*.md"))
+
       files.each do |file|
-        content = File.read(file)
-        filename = File.basename(file, ".*")    
-        final_html = convert(content, file)
-        output_path = File.join(path, "#{filename}.html")
-        File.write(output_path, final_html)
-        puts "Saved #{filename}.html"
+        save_file(file)
       end
     end
 
