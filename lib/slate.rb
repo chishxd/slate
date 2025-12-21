@@ -22,16 +22,14 @@ module Slate
     def self.convert(md_content, title)
       raw_html = Kramdown::Document.new(md_content, input: 'GFM').to_html
 
-      final_html = "<head>\n<title> #{title} </title> <link href='style.css' rel='stylesheet'></head><body class='markdown-body'>\n#{raw_html}\n</body>"
+      final_html = "<head>\n<title> #{title} </title>\n <link href='style.css' rel='stylesheet'>\n</head>\n<body class='markdown-body'>\n#{raw_html}\n</body>"
 
       return final_html
     end
 
-    def self.move_css(path)
-      dir = File.dirname(path)
-  
+    def self.copy_css(dest)  
       style_path = File.join(__dir__, '..', 'style.css')
-      FileUtils.cp(style_path, dir)
+      FileUtils.cp(style_path, dest)
     end
 
     def self.save_file(path)
@@ -47,14 +45,15 @@ module Slate
 
     def self.process_file(path)
       puts "Argument seems to be a single file, Parsing it"
-      move_css(path)
+      dest = File.dirname(path)
+      copy_css(dest)
       save_file(path)
     end
 
     def self.process_directory(path)
       puts "Found a directory, gotta check all .md files!"
 
-      move_css(path)
+      copy_css(path)
   
       files = Dir.glob(File.join(path, "*.md"))
 
