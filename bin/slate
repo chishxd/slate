@@ -4,32 +4,24 @@ require_relative '../lib/slate'
 require 'kramdown'
 require 'fileutils'
 
-args = ARGV[0]
-
-if args.nil?
-  puts "Error: Please enter a file"
-  exit
-end
-
 # filename = File.basename(args, ".*")
 
 # Ruby uses begin-rescue keywords instead of try-catch LMAO.... WHYYY
 begin
-
-  Slate::CLI.run(args)
+  Slate::CLI.run(ARGV)
   # if File.file?(args)
   #   puts "Argument seems to be a single file, Parsing it"
   #   content = File.read(args)
-  #   filename = File.basename(args, ".*")  
+  #   filename = File.basename(args, ".*")
   #   dir = File.dirname(args)
 
   #   style_path = File.join(__dir__, '..', 'style.css')
   #   FileUtils.cp(style_path, dir)
-    
+
   #   final_html = Slate.convert(content, filename)
   #   File.write("#{filename}.html", final_html)
   #   puts "Saved #{filename}.html"
-    
+
   # elsif File.directory?(args)
   #   puts "Found a directory, gotta check all .md files!"
 
@@ -39,16 +31,15 @@ begin
   #   files = Dir.glob(File.join(args, "*.md"))
   #   files.each do |file|
   #     content = File.read(file)
-  #     filename = File.basename(file, ".*")      
+  #     filename = File.basename(file, ".*")
   #     final_html = Slate.convert(content, file)
   #     File.write("#{filename}.html", final_html)
   #     puts "Saved #{filename}.html"
   #   end
 
-
   # else
   #   puts "Error: #{args} is neither a file nor a directory"
   # end
-rescue => e
-    puts "Unexpected error occured: #{e.message}"
+rescue StandardError => e
+  puts "Unexpected error occured: #{e.message}"
 end
