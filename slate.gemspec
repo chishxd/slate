@@ -3,7 +3,7 @@
 require_relative "lib/slate/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "slate"
+  spec.name = "chishgg-slate"
   spec.version = Slate::VERSION
   spec.authors = ["Chinmay Shet"]
   spec.email = ["chishxd@gmail.com"]
