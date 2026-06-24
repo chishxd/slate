@@ -4,9 +4,10 @@ require_relative "lib/slate/version"
 
 Gem::Specification.new do |spec|
   spec.name = "chishgg-slate"
-  spec.version = Slate::VERSION
-  spec.authors = ["Chinmay Shet"]
-  spec.email = ["chishxd@gmail.com"]
+  spec.version  = Slate::VERSION
+  spec.authors  = ["Chinmay Shet"]
+  spec.email    = ["chishxd@gmail.com"]
+  spec.licenses = ['GPL-3.0-or-later']
 
   spec.summary = "A simple markdown to HTML converter written in Ruby"
   spec.description = "A simple markdown to HTML converter made in process of learning ruby for the YSWS named Dummies by HackClub."
@@ -25,11 +26,11 @@ Gem::Specification.new do |spec|
   spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
     ls.readlines("\x0", chomp: true).reject do |f|
       (f == gemspec) ||
-        f.start_with?(*%w[bin/ test/ spec/ features/ .git appveyor Gemfile])
+        f.start_with?(*%w[test/ spec/ features/ .git appveyor Gemfile])
     end
   end
-  spec.bindir = "exe"
-  spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
+  spec.bindir = "bin"
+  spec.executables = ["slate"]
   spec.require_paths = ["lib"]
 
   # Uncomment to register a new dependency of your gem
