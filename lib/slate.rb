@@ -58,16 +58,16 @@ module Slate
       end
     end
 
-    def self.convert(md_content, title)
+    def self.convert(md_content, title, theme)
       raw_html = Kramdown::Document.new(md_content, input: 'GFM').to_html
 
-      "<head>\n<title> #{title} </title>\n <link href='style.css' rel='stylesheet'>\n</head>\n<body class='markdown-body'>\n#{raw_html}\n</body>"
+      "<head>\n<title> #{title} </title>\n <link href='#{theme}.css' rel='stylesheet'>\n</head>\n<body class='markdown-body'>\n#{raw_html}\n</body>"
     end
 
     def self.copy_css(dest, theme)
       FileUtils.mkdir_p(dest)
       style_path = File.join(__dir__, '..','themes',"#{theme}.css")
-      FileUtils.cp(style_path, File.join(dest, 'style.css'))
+      FileUtils.cp(style_path, File.join(dest, "#{theme}.css"))
     end
 
     def self.save_file(path, options)
@@ -77,7 +77,7 @@ module Slate
 
       FileUtils.mkdir_p(dir)
       output_path = File.join(dir, "#{filename}.html")
-      final_html = convert(content, filename)
+      final_html = convert(content, filename, options.theme)
       File.write(output_path, final_html)
       puts "Saved #{filename}.html"
     end
