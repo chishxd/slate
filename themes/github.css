@@ -688,7 +688,7 @@
 
 .markdown-body span.float-right > span {
   display: block;
-  margin: 13px auto 0;
+  margin: 13px auto 0;  
   overflow: hidden;
   text-align: right;
 }

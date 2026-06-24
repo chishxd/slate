@@ -3,15 +3,17 @@ require 'kramdown'
 require 'kramdown-parser-gfm'
 require 'optparse'
 
+THEMES = %w[github minimal serif pico-blue simple].freeze
+
 module Slate
   class Error < StandardError; end
 
-  Options = Struct.new(:output_dir)
+  Options = Struct.new(:output_dir, :theme)
   # The main class to rule them all
   class CLI
     # This method is the MAIN method... Refactored from bin/slate
     def self.run(argv)
-      options = Options.new(nil)
+      options = Options.new(nil, "github")
 
       OptionParser.new do |opts|
         opts.banner = 'Usage: slate [options] <file_or_directory>'
@@ -29,12 +31,20 @@ module Slate
           puts opts
           exit
         end
+
+        opts.on('-t', '--theme THEME', 'Theme to use') do |theme|
+          options.theme = theme
+        end
+
       end.parse!(argv)
+
+      unless THEMES.include?(options.theme)
+        abort "Unknown theme '#{options.theme}'. Available themes: #{THEMES.join(', ')}"
+      end
 
       path = argv.first
       if path.nil?
-        puts 'Error: You must provide a file or directory.'
-        puts opt_parser
+        puts 'Usage: slate [options] <file_or_directory>'
         exit
       end
 
@@ -54,10 +64,10 @@ module Slate
       "<head>\n<title> #{title} </title>\n <link href='style.css' rel='stylesheet'>\n</head>\n<body class='markdown-body'>\n#{raw_html}\n</body>"
     end
 
-    def self.copy_css(dest)
+    def self.copy_css(dest, theme)
       FileUtils.mkdir_p(dest)
-      style_path = File.join(__dir__, '..', 'style.css')
-      FileUtils.cp(style_path, dest)
+      style_path = File.join(__dir__, '..','themes',"#{theme}.css")
+      FileUtils.cp(style_path, File.join(dest, 'style.css'))
     end
 
     def self.save_file(path, options)
@@ -75,14 +85,14 @@ module Slate
     def self.process_file(path, options)
       puts 'Argument seems to be a single file, Parsing it'
       dest = options.output_dir || File.dirname(path)
-      copy_css(dest)
+      copy_css(dest, options.theme)
       save_file(path, options)
     end
 
     def self.process_directory(path, options)
       puts 'Found a directory, gotta check all .md files!'
       dir = options.output_dir || path
-      copy_css(dir)
+      copy_css(dir, options.theme)
 
       files = Dir.glob(File.join(path, '*.md'))
 
